@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["es6", "webworker"],
+    "outDir": "lib",
+    "moduleResolution": "node",
+    "module": "es6",
+    "target": "es5",
+    "importHelpers": true
+  },
+  "include": ["src"]
+}
