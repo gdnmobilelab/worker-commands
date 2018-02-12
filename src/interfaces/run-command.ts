@@ -1,5 +1,4 @@
-export interface RunCommand {
+export interface RunCommand<T> {
   command: string;
-  options?: { [id: string]: any };
-  event?: NotificationEvent;
+  options?: T;
 }

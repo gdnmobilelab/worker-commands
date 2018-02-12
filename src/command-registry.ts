@@ -3,9 +3,9 @@ import { RunCommand } from "./interfaces/run-command";
 let storedCommands: { [name: string]: CommandFunction } = {};
 let listeners: { [name: string]: Set<CommandListener> } = {};
 
-type CommandListener = (opts: any, event?: NotificationEvent) => void;
+export type CommandListener = (opts: any, event?: NotificationEvent) => void;
 
-type CommandFunction = (opts: any, event?: NotificationEvent) => Promise<any>;
+export type CommandFunction = (opts: any, event?: NotificationEvent) => Promise<any>;
 
 export function registerCommand(name: string, command: CommandFunction) {
   if (storedCommands[name]) {
@@ -14,7 +14,7 @@ export function registerCommand(name: string, command: CommandFunction) {
   storedCommands[name] = command;
 }
 
-export function fireCommand({ command, options }: RunCommand, event?: NotificationEvent) {
+function fireIndividualCommand<T>({ command, options }: RunCommand<T>, event?: NotificationEvent) {
   if (!storedCommands[command]) {
     throw new Error(`No such command '${command}'`);
   }
@@ -24,6 +24,17 @@ export function fireCommand({ command, options }: RunCommand, event?: Notificati
   }
 
   return storedCommands[command](options, event);
+}
+
+export function fireCommand<T>(
+  command: RunCommand<T> | RunCommand<T>[],
+  event?: NotificationEvent
+) {
+  if (command instanceof Array) {
+    return Promise.all(command.map(c => fireIndividualCommand(c, event)));
+  }
+
+  return fireIndividualCommand(command, event);
 }
 
 export function addListener(name: string, listener: CommandListener) {

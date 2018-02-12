@@ -3,6 +3,6 @@ export interface UpdatedNotification extends Notification {
   data?: any;
 }
 
-export class UpdatedNotificationEvent extends NotificationEvent {
-  notification: UpdatedNotification;
-}
+// export class UpdatedNotificationEvent extends NotificationEvent {
+//   notification: UpdatedNotification;
+// }

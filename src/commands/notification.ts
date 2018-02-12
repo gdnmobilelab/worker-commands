@@ -4,12 +4,12 @@ import { UpdatedNotification } from "../interfaces/updated-notification";
 
 declare var self: ServiceWorkerGlobalScope;
 
-interface NotificationAction {
+export interface NotificationAction {
   action: string;
   title: string;
 }
 
-interface ShowNotification {
+export interface ShowNotification {
   title: string;
   badge?: string;
   icon?: string;
@@ -18,11 +18,11 @@ interface ShowNotification {
   data?: any;
   tag?: string;
   actions?: NotificationAction[];
-  events: { [name: string]: RunCommand };
+  events?: { [name: string]: RunCommand<any> | RunCommand<any>[] };
 }
 
-interface RemoveNotificationOptions {
-  tag: string;
+export interface RemoveNotificationOptions {
+  tag?: string;
 }
 
 async function showNotification(options: ShowNotification) {
@@ -45,9 +45,16 @@ async function showNotification(options: ShowNotification) {
   await self.registration.showNotification(title, nonTitleOptions);
 }
 
-async function removeNotifications({ tag }: RemoveNotificationOptions) {
-  if (!tag) {
-    throw new Error("Must specify a tag when removing notifications");
+async function removeNotifications(
+  removeOptions?: RemoveNotificationOptions,
+  event?: NotificationEvent
+) {
+  let tag = removeOptions ? removeOptions.tag : undefined;
+
+  if (!tag && event) {
+    event.notification.close();
+  } else if (!tag) {
+    throw new Error("Must provide a notificationevent or tag to remove notification");
   }
 
   let currentNotifications = await self.registration.getNotifications({ tag });
@@ -60,6 +67,7 @@ async function removeNotifications({ tag }: RemoveNotificationOptions) {
 }
 
 async function processNotificationClick(empty: void, e: NotificationEvent | undefined) {
+  console.log(e);
   if (!e) {
     throw new Error("Cannot process notification click without also sending event");
   }
@@ -81,7 +89,7 @@ async function processNotificationClick(empty: void, e: NotificationEvent | unde
     eventName = e.action;
   }
 
-  let targetEvent = notification.data.__events["on" + e.action];
+  let targetEvent = notification.data.__events["on" + eventName];
 
   if (!targetEvent) {
     console.error(`Notification received on${eventName} event, but no listener was attached`);
@@ -110,24 +118,26 @@ async function processNotificationClose(empty: void, e: NotificationEvent | unde
   await fireCommand(notification.data.__events.onclose, e);
 }
 
-registerCommand("notification.show", showNotification);
-registerCommand("notification.remove", removeNotifications);
-registerCommand("notification.process-click", processNotificationClick);
-registerCommand("notification.process-close", processNotificationClose);
-
 function checkIfLibraryNotification(notification: UpdatedNotification) {
   // We don't want to mess with any notifications not sent through this
   // library - so we can do this simple check:
-  return !notification.data || notification.data.__workerCommandNotification !== true;
+  return notification.data && notification.data.__workerCommandNotification === true;
 }
 
-// We have these set up as specific commands so that we can attach listeners
-// for things like analytics later on.
+export function setup() {
+  registerCommand("notification.show", showNotification);
+  registerCommand("notification.close", removeNotifications);
+  registerCommand("notification.process-click", processNotificationClick);
+  registerCommand("notification.process-close", processNotificationClose);
 
-self.addEventListener("notificationclick", function(e) {
-  e.waitUntil(fireCommand({ command: "process-notification-click" }, e));
-});
+  // We have these set up as specific commands so that we can attach listeners
+  // for things like analytics later on.
 
-self.addEventListener("notificationclose", function(e) {
-  e.waitUntil(fireCommand({ command: "process-notification-close" }, e));
-});
+  self.addEventListener("notificationclick", function(e) {
+    e.waitUntil(fireCommand({ command: "notification.process-click" }, e));
+  });
+
+  self.addEventListener("notificationclose", function(e) {
+    e.waitUntil(fireCommand({ command: "notification.process-close" }, e));
+  });
+}

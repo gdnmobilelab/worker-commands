@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "module": "es6",
     "target": "es5",
-    "importHelpers": true
+    "importHelpers": true,
+    "declaration": true
   },
   "include": ["src"]
 }
