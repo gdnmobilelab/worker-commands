@@ -67,7 +67,6 @@ async function removeNotifications(
 }
 
 async function processNotificationClick(empty: void, e: NotificationEvent | undefined) {
-  console.log(e);
   if (!e) {
     throw new Error("Cannot process notification click without also sending event");
   }

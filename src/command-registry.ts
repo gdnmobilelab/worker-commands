@@ -20,7 +20,7 @@ function fireIndividualCommand<T>({ command, options }: RunCommand<T>, event?: N
   }
 
   if (listeners[command]) {
-    listeners[command].forEach(l => l(options));
+    listeners[command].forEach(l => l(options, event));
   }
 
   return storedCommands[command](options, event);
