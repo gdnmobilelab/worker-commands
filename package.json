@@ -5,11 +5,15 @@
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build-worker-lib": "tsc",
+    "build-client-lib":
+      "rollup lib/bridge/client-side.js --output.format umd --name sendcommand --output.file send-command.js",
+    "build": "npm run build-worker-lib && npm run build-client-lib"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "rollup": "^0.56.2",
     "tslib": "^1.9.0"
   }
 }

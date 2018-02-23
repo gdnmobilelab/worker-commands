@@ -80,6 +80,6 @@ async function openWindow(options: OpenOptions) {
 }
 
 export function setup() {
-  registerCommand("clients.focus", focusWindow);
-  registerCommand("clients.open", openWindow);
+  registerCommand("client.focus", focusWindow);
+  registerCommand("client.open", openWindow);
 }
