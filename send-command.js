@@ -29,7 +29,7 @@ function sendClient(cmd) {
         });
         var msg = {};
         msg[PAYLOAD_KEY] = cmd;
-        reg.active.postMessage(msg);
+        reg.active.postMessage(msg, [replyChannel.port1]);
         return replyPromise;
     });
 }

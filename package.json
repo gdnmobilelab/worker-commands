@@ -9,9 +9,9 @@
         "build-worker-lib-es6":
             "rollup -c rollup.config.js src/index.ts --output.file lib/worker-commands.es6.js --output.format es",
         "build-worker-lib":
-            "rollup -c rollup.config.js src/index.ts --output.file lib/worker-commands.js --output.format umd",
+            "rollup -c rollup.config.js src/index.ts --output.file lib/worker-commands.js --output.format umd --name worker-commands",
         "build-client-lib":
-            "rollup lib/bridge/client-side.js --output.format umd --name sendcommand --output.file send-command.js",
+            "TYPESCRIPT_DECLARATION=false rollup -c rollup.config.js src/bridge/client-side.ts --output.format umd --name sendcommand --output.file send-command.js",
         "build": "npm run build-worker-lib-es6 &&npm run build-worker-lib && npm run build-client-lib",
         "test": "cd tests && gobble"
     },

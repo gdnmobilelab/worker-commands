@@ -2,6 +2,11 @@ const nodeResolve = require("rollup-plugin-node-resolve");
 const typescript = require("rollup-plugin-typescript2");
 const commonjs = require("rollup-plugin-commonjs");
 
+let outputDeclaration = true;
+if (process.env.TYPESCRIPT_DECLARATION !== undefined) {
+    outputDeclaration = process.env.TYPESCRIPT_DECLARATION === "true";
+}
+
 module.exports = {
     plugins: [
         commonjs({
@@ -10,7 +15,9 @@ module.exports = {
         nodeResolve(),
         typescript({
             tsconfigOverride: {
-                declaration: false
+                compilerOptions: {
+                    declaration: outputDeclaration
+                }
             }
         })
     ]
