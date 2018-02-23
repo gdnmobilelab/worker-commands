@@ -1,19 +1,38 @@
 {
-  "name": "worker-commands",
-  "version": "1.0.0",
-  "description": "",
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
-  "scripts": {
-    "build-worker-lib": "tsc",
-    "build-client-lib":
-      "rollup lib/bridge/client-side.js --output.format umd --name sendcommand --output.file send-command.js",
-    "build": "npm run build-worker-lib && npm run build-client-lib"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "rollup": "^0.56.2",
-    "tslib": "^1.9.0"
-  }
+    "name": "worker-commands",
+    "version": "1.0.0",
+    "description": "",
+    "main": "lib/worker-commands.js",
+    "module": "lib/worker-commands.es6.js",
+    "typings": "lib/index.d.ts",
+    "scripts": {
+        "build-worker-lib-es6":
+            "rollup -c rollup.config.js src/index.ts --output.file lib/worker-commands.es6.js --output.format es",
+        "build-worker-lib":
+            "rollup -c rollup.config.js src/index.ts --output.file lib/worker-commands.js --output.format umd",
+        "build-client-lib":
+            "rollup lib/bridge/client-side.js --output.format umd --name sendcommand --output.file send-command.js",
+        "build": "npm run build-worker-lib-es6 &&npm run build-worker-lib && npm run build-client-lib",
+        "test": "cd tests && gobble"
+    },
+    "author": "",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/chai": "^4.1.2",
+        "@types/mocha": "^2.2.48",
+        "chai": "^4.1.2",
+        "gobble": "^0.12.0",
+        "gobble-cli": "^0.8.0",
+        "gobble-rollup": "^0.40.0",
+        "gobble-typescript": "git+https://github.com/alastaircoote/gobble-typescript.git",
+        "mocha": "^5.0.1",
+        "rollup": "^0.56.2",
+        "rollup-plugin-commonjs": "^8.3.0",
+        "rollup-plugin-node-resolve": "^3.0.3",
+        "tslib": "^1.9.0",
+        "typescript": "^2.7.2"
+    },
+    "dependencies": {
+        "rollup-plugin-typescript2": "^0.11.1"
+    }
 }

@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "strict": true,
-    "lib": ["es6", "webworker"],
-    "outDir": "lib",
-    "moduleResolution": "node",
-    "module": "es6",
-    "target": "es5",
-    "importHelpers": true,
-    "declaration": true
-  },
-  "include": ["src"]
+    "compilerOptions": {
+        "strict": true,
+        "lib": ["es6", "webworker"],
+        "outDir": "lib",
+        "moduleResolution": "node",
+        "module": "es6",
+        "target": "es5",
+        "importHelpers": true,
+        "declaration": true
+    },
+    "include": ["src"]
 }

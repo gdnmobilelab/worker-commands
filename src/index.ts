@@ -3,6 +3,7 @@ import { setup as notificationSetup } from "./commands/notification";
 import { setup as clientSetup } from "./commands/client";
 import { setup as registrationSetup } from "./commands/registration";
 import { setup as pushSetup } from "./push";
+import { setup as cacheSetup } from "./commands/cache";
 import { setup as setupWorker } from "./bridge/worker-side";
 
 export { ShowNotification, NotificationAction, RemoveNotificationOptions } from "./commands/notification";
@@ -14,5 +15,6 @@ export function setup() {
   clientSetup();
   registrationSetup();
   pushSetup();
+  cacheSetup();
   setupWorker();
 }

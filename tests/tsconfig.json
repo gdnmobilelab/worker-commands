@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": ["es6", "dom"],
+    "moduleResolution": "node",
+    "module": "es6",
+    "target": "es6"
+  }
+}

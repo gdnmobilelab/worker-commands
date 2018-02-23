@@ -30,9 +30,7 @@ async function getExistingWindow(url: string, options: MatchOptions) {
 
   let urlToSearch = filterURL(url, options);
 
-  return clients.find(c => filterURL(c.url, options) === url && c instanceof WindowClient) as
-    | WindowClient
-    | undefined;
+  return clients.find(c => filterURL(c.url, options) === url && c instanceof WindowClient) as WindowClient | undefined;
 }
 
 async function focusWindow(options?: FocusOptions) {
@@ -79,7 +77,22 @@ async function openWindow(options: OpenOptions) {
   }
 }
 
+interface PostMessageOptions {
+  url?: string;
+  message: any;
+}
+
+async function postMessage(options: PostMessageOptions) {
+  let allClients = await self.clients.matchAll();
+  if (options.url) {
+    allClients = allClients.filter(c => c.url === options.url);
+  }
+
+  allClients.forEach(c => c.postMessage(options.message));
+}
+
 export function setup() {
   registerCommand("client.focus", focusWindow);
   registerCommand("client.open", openWindow);
+  registerCommand("client.post-message", postMessage);
 }
